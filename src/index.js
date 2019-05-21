@@ -15,6 +15,8 @@ class App extends React.Component {
     axios
       .get("https://api.idmcdb.org/api/disaster_data?ci=IDMCWSHSOLO009")
       .then(({ data }) => {
+        const years = new Set(data.results.map(el => el.year));
+
         const weatherRelated = data.results.filter(
           el => el.hazard_category === "Weather related"
         );
@@ -24,9 +26,10 @@ class App extends React.Component {
         const otherReason = data.results.filter(
           el =>
             el.hazard_category !== "Geophysical" &&
-            el.hazard_category !== "Weather related" &&
-            el.hazard_category
+            el.hazard_category !== "Weather related"
         );
+
+        console.log("otherReason",otherReason)
 
         const weatherRelatedSum = weatherRelated.reduce(
           (accum, item) => accum + item.new_displacements || 0,
@@ -38,60 +41,22 @@ class App extends React.Component {
           0
         );
 
-        // my code
-        const proccessed = data.results.map(item => {
+        const graphData = Array.from(years).sort((a, b) => a - b).map(item => {
           return {
-            year: item.year,
+            year: item,
             other: otherReason
-              .filter(i => i.year === item.year)
+              .filter(i => i.year === item)
               .reduce((accum, item) => accum + item.new_displacements || 0, 0),
             "weather related": weatherRelated
-              .filter(i => i.year === item.year)
+              .filter(i => i.year === item)
               .reduce((accum, item) => accum + item.new_displacements || 0, 0),
             geophysical: geophysical
-              .filter(i => i.year === item.year)
+              .filter(i => i.year === item)
               .reduce((accum, item) => accum + item.new_displacements || 0, 0)
           };
         });
+        console.log(graphData);
 
-        // CONSOLE.LOG LOOP
-        // avoid loging whole API (super slow on codesandbox)
-        let loops = 0;
-        let checkingLoop = function() {
-          while (loops < 10) {
-            console.log(`proccessed[${loops}]`, proccessed[loops]);
-            // processed[2]&[3] && processed[5]&[6]&[7] are duplicates, not good
-            loops++;
-          }
-        };
-        // checkingLoop();
-
-        const graphData = [];
-        proccessed.map(item => {
-          // push the first item of processed to graphData Array
-          if (graphData.length === 0) {
-            graphData.push(item);
-            return false;
-          }
-          let exists = false;
-          for (let i = 0; i < graphData.length; i++) {
-            // for year existingin graphData=> increase (add) the value of new_displacments (caused by weatehr or geophysical)
-            if (graphData[i].year === item.year) {
-              exists = true;
-
-              graphData[i]["weather related"] += item["weather related"];
-              graphData[i].other += item.other;
-              graphData[i].geophysical += item.geophysical;
-              break;
-            }
-          }
-          if (!exists) {
-            // for year non yet existingin graphData=> push to graphData
-            graphData.push(item);
-          }
-          graphData.sort((a, b) => a - b);
-          return false;
-        });
 
         this.setState({
           causedByWeather: weatherRelatedSum,
@@ -107,8 +72,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <h3>
-          Caused by Weahter Global (all years) - {this.state.causedByWeather}
+  <h3>Caused by Weahter Global (all years) - {this.state.causedByWeather}
         </h3>
         <h3> Other Causes Global (all years): {this.state.causedByOther}</h3>
         <Bar data={this.state.data} />
