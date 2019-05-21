@@ -55,15 +55,16 @@ class App extends React.Component {
         });
 
         // CONSOLE.LOG LOOP
-        // check stuff without login whole API (super slow on codesandbox)
+        // avoid loging whole API (super slow on codesandbox)
         let loops = 0;
         let checkingLoop = function() {
           while (loops < 10) {
-            console.log("proccessed[results]", proccessed[loops]);
+            console.log(`proccessed[${loops}]`, proccessed[loops]);
+            // processed[2]&[3] && processed[5]&[6]&[7] are duplicates, not good
             loops++;
           }
         };
-        checkingLoop();
+        // checkingLoop();
 
         const graphData = [];
         proccessed.map(item => {
@@ -74,19 +75,21 @@ class App extends React.Component {
           }
           let exists = false;
           for (let i = 0; i < graphData.length; i++) {
+            // for year existingin graphData=> increase (add) the value of new_displacments (caused by weatehr or geophysical)
             if (graphData[i].year === item.year) {
               exists = true;
-              graphData[i]["weather related"] =
-                graphData[i]["weather related"] + item["weather related"];
-              graphData[i].other = graphData[i].other + item.other;
-              graphData[i].geophysical =
-                graphData[i].geophysical + item.geophysical;
+
+              graphData[i]["weather related"] += item["weather related"];
+              graphData[i].other += item.other;
+              graphData[i].geophysical += item.geophysical;
               break;
             }
           }
           if (!exists) {
+            // for year non yet existingin graphData=> push to graphData
             graphData.push(item);
           }
+          graphData.sort((a, b) => a - b);
           return false;
         });
 
