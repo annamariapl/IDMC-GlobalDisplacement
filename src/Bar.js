@@ -1,6 +1,7 @@
 import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import PropTypes from "prop-types";
+import {hazard_cats_names} from "./index.js";
 
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
@@ -11,7 +12,7 @@ export const Bar = props => (
   <div style={{ height: "500px", width: "500px" }}>
     <ResponsiveBar
       data={props.data}
-      keys={["other", "weather related", "geophysical"]}
+      keys={hazard_cats_names}
       indexBy="year"
       margin={{
         top: 50,
