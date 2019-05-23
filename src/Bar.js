@@ -9,12 +9,12 @@ import {hazard_cats_names} from "./index.js";
 // website examples showcase many properties,
 // you'll often use just a few of them.
 export const Bar = props => (
-  
-  <div style={{ height: "500px", width: "500px" }}>
+
+  <div style={{ height: "500px", width: "100%" }}>
   <ResponsiveBar
   data={props.data}
-  keys={hazard_cats_names}
-  indexBy="year"
+  keys= {hazard_cats_names}
+  indexBy="month"
   margin={{
     top: 50,
     right: 130,
@@ -52,12 +52,12 @@ export const Bar = props => (
     axisTop={null}
     axisRight={null}
     axisBottom={{
-      tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: "year",
+      tickSize: 2,
+      tickPadding: 50,
+      tickRotation: 270,
+      legend: "month",
       legendPosition: "middle",
-      legendOffset: 32
+      legendOffset: 100
     }}
     axisLeft={{
       tickSize: 5,
@@ -67,6 +67,7 @@ export const Bar = props => (
       legendPosition: "middle",
       legendOffset: -40
     }}
+    enableLabel={false}
     labelSkipWidth={0}
     labelSkipHeight={0}
     labelTextColor={{
@@ -108,7 +109,7 @@ export const Bar = props => (
 Bar.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      // year: PropTypes.number.isRequired,
+      // year PropTypes.number.isRequired,
       month: PropTypes.number.isRequired,
       Geophysical: PropTypes.number.isRequired,
       "Weather related": PropTypes.number.isRequired,

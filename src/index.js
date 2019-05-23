@@ -14,7 +14,7 @@ class App extends React.Component {
         //  without uniqueArray: const years = Array.from(new Set(data.results.map(el => el.year))).sort((a, b) => a - b);
        // function uniqueArray returns a sorted Array without duplicates. It requires an Array that you want to sort, and the information what you want to map(el)
        const uniqueArray = (myArray, myFunction) => {
-        return [...new Set(myArray.map(el => myFunction(el)))].sort((a, b) => a - b);
+        return [...new Set(myArray.map(el => myFunction(el)))].sort(/*(a, b) => a - b*/);
       }
 
       const getHazardCategory = (value) => {
@@ -26,16 +26,14 @@ class App extends React.Component {
     .get("https://api.idmcdb.org/api/disaster_data?ci=IDMCWSHSOLO009")
     .then(({ data }) => {
         // keeping const years just in case, the specifications change to years (probable)
-        const years = uniqueArray(data.results, el => el.year);
+        // const years = uniqueArray(data.results, el => el.year);
         const months = uniqueArray(data.results, el => el.start_date.substring(0,7));
         const hazard_cats = uniqueArray(data.results, el => el.hazard_category);
         hazard_cats_names = uniqueArray(data.results, el => getHazardCategory(el.hazard_category));
-        console.log(hazard_cats_names)
-
+        
         const graphData = months.map(item => {
           const result = {};
           result["month"] = item;
-
 
           for (const value of Object.values(hazard_cats)) {
             const hazardCategoryValuesSum = data.results
@@ -44,6 +42,7 @@ class App extends React.Component {
             .reduce((displacement_accumulator, element) => displacement_accumulator + element.new_displacements || 0, 0);
             result[getHazardCategory(value)] = hazardCategoryValuesSum;
           }
+          console.log(result);
           return result;
         });
 
