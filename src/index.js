@@ -60,7 +60,7 @@ this.setState({
     return (
       <div className="App">
       <h3> Global (worldwide) displacements by different causes </h3>
-      <Bar data={this.state.data} />
+      <Bar data={this.state.data}  />
       </div>
       );
   }
