@@ -108,7 +108,8 @@ export const Bar = props => (
 Bar.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      year: PropTypes.number.isRequired,
+      // year: PropTypes.number.isRequired,
+      month: PropTypes.number.isRequired,
       Geophysical: PropTypes.number.isRequired,
       "Weather related": PropTypes.number.isRequired,
     })
