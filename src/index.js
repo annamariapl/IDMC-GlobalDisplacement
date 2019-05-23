@@ -25,26 +25,27 @@ class App extends React.Component {
     axios
     .get("https://api.idmcdb.org/api/disaster_data?ci=IDMCWSHSOLO009")
     .then(({ data }) => {
-      const years = uniqueArray(data.results, el => el.year);
-      const hazard_cats = uniqueArray(data.results, el => el.hazard_category);
-      hazard_cats_names = uniqueArray(data.results, el => getHazardCategory(el.hazard_category));
+     const years = uniqueArray(data.results, el => el.year);
+     const hazard_cats = uniqueArray(data.results, el => el.hazard_category);
+     hazard_cats_names = uniqueArray(data.results, el => getHazardCategory(el.hazard_category));
 
-      const graphData = years.map(item => {
-        const result = {};
-        result["year"] = item;
+     const graphData = years.map(item => {
+      const result = {};
+      result["year"] = item;
 
-        for (const value of Object.values(hazard_cats)) {
-          const hazardCategoryValues = data.results
-          .filter(e => e.hazard_category === value)
-          .filter(e=> e.year === item)
-          .reduce((displacement_accumulator, element) => displacement_accumulator + element.new_displacements || 0, 0);
-          result[getHazardCategory(value)] = hazardCategoryValues;
-        }
-        return result;
-      });
+
+      for (const value of Object.values(hazard_cats)) {
+        const hazardCategoryValuesSum = data.results
+        .filter(e => e.hazard_category === value)
+        .filter(e=> e.year === item)
+        .reduce((displacement_accumulator, element) => displacement_accumulator + element.new_displacements || 0, 0);
+        result[getHazardCategory(value)] = hazardCategoryValuesSum;
+      }
+      return result;
+    });
 
 // final check what goes to the graph
-// console.log("graph data", graphData);
+console.log("graph data", graphData);
 
 
 this.setState({
