@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@nivo/bar": "0.56.2",
-    "axios": "0.18.0",
+    "axios": "0.21.1",
     "nivo": "0.31.0",
     "prop-types": "15.7.2",
     "react": "16.8.6",
